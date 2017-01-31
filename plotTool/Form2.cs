@@ -18,20 +18,23 @@ namespace plotTool
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         List<int> selectedItems;
         string[] fields;
-        
+        System.Windows.Forms.Timer timer1;
+
 
         public PlottingWindow()
         {
             InitializeComponent();
+            this.FormClosing += plottingWindow_FormClosing;
 
             //chart1.ChartAreas[0].AxisY.Minimum = -1.5;
             //chart1.ChartAreas[0].AxisY.Maximum = 1.5;
 
-            System.Windows.Forms.Timer timer1 = new System.Windows.Forms.Timer();
+            timer1 = new System.Windows.Forms.Timer();
             timer1.Tick += updateChart;
             timer1.Interval = 10;
             timer1.Start();
         }
+
 
         public void SetData(double[] time, double[,] data, List<int> selectedItems, string[] fields)
         {
@@ -49,6 +52,7 @@ namespace plotTool
 
         private void updateChart(object sender, EventArgs e)
         {
+
             // TODO: make it general to plot multiple series
             chart1.Series[fields[selectedItems[0]]].Points.Clear();
             for (int i = 0; i < data.GetLength(1); i++)
@@ -56,6 +60,11 @@ namespace plotTool
                 chart1.Series[fields[selectedItems[0]]].Points.AddXY(time[i], data[selectedItems[0], i]);
             }
             //UpdateData();
+        }
+
+        private void plottingWindow_FormClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            timer1.Stop();
         }
     }
 }
