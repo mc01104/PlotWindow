@@ -43,21 +43,23 @@ namespace plotTool
             this.selectedItems = selectedItems;
             this.fields = fields;
 
-
-            chart1.Series["Series1"].Name = fields[selectedItems[0]];
-            chart1.Series[fields[selectedItems[0]]].Points.Clear();
-            chart1.Series[fields[selectedItems[0]]].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            chart1.Series.Clear();
+            for (int i = 0; i < selectedItems.Count; i++)
+            {
+                chart1.Series.Add(fields[selectedItems[i]]);
+                chart1.Series[fields[selectedItems[i]]].Points.Clear();
+                chart1.Series[fields[selectedItems[i]]].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
+            }
 
         }
 
         private void updateChart(object sender, EventArgs e)
         {
-
-            // TODO: make it general to plot multiple series
-            chart1.Series[fields[selectedItems[0]]].Points.Clear();
-            for (int i = 0; i < data.GetLength(1); i++)
+            for (int j = 0; j < selectedItems.Count; j++)
             {
-                chart1.Series[fields[selectedItems[0]]].Points.AddXY(time[i], data[selectedItems[0], i]);
+                chart1.Series[fields[selectedItems[j]]].Points.Clear();
+                for (int i = 0; i < data.GetLength(1); i++)
+                    chart1.Series[fields[selectedItems[j]]].Points.AddXY(time[i], data[selectedItems[j], i]);
             }
             //UpdateData();
         }
