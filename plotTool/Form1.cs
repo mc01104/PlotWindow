@@ -16,7 +16,7 @@ namespace plotTool
     {
 
         //private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        int plottingWindow = 100;
+        int plottingWindow = 10000;
         private double[] time;
         private double[,] plottingData;
 
@@ -32,7 +32,7 @@ namespace plotTool
             InitializeComponent();
 
             ServerIPText.Text = "127.0.0.1";
-            ServerPortText.Text = "27015";
+            ServerPortText.Text = "27016";
 
             time = new double[plottingWindow];
             for (int i = 0; i < time.Length; i++)
