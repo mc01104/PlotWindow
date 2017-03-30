@@ -25,8 +25,8 @@ namespace plotTool
         {
             InitializeComponent();
             this.FormClosing += plottingWindow_FormClosing;
-            this.AutoSize = true;
-            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            //this.AutoSize = true;
+            //this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             //chart1.ChartAreas[0].AxisY.Minimum = -1.5;
             //chart1.ChartAreas[0].AxisY.Maximum = 1.5;
@@ -51,7 +51,7 @@ namespace plotTool
                 chart1.Series.Add(fields[selectedItems[i]]);
                 chart1.Series[fields[selectedItems[i]]].Points.Clear();
                 chart1.Series[fields[selectedItems[i]]].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.FastLine;
-                chart1.ChartAreas[0].AxisY.Maximum = 1.2; // need to find a better way to change that
+                chart1.ChartAreas[0].AxisY.Maximum = 10.2; // need to find a better way to change that
             }
 
         }
