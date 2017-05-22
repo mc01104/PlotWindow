@@ -16,32 +16,43 @@ namespace plotTool
     {
 
         //private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
-        int plottingWindow = 10000;
-        private double[] time;
+        int num_data_samples = 3000;
+        //private double[] time;
+        private List<double> time;
+        //private double[,] plottingData;
         private double[,] plottingData;
 
+        
         // network stuff
         private NetworkStream stream;
         private TcpClient client;
+
+        private System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
 
         // check box list
         string[] fields;
 
         public Form1()
         {
+            //AllocConsole();
+            
             InitializeComponent();
-
             ServerIPText.Text = "127.0.0.1";
-            ServerPortText.Text = "27016";
+            ServerPortText.Text = "27015";
 
-            time = new double[plottingWindow];
-            for (int i = 0; i < time.Length; i++)
-                time[i] = Convert.ToDouble(i);
+            //time = new double[plottingWindow];
+            time = new List<double>(num_data_samples);
+            for (int i = 0; i < num_data_samples; i++)
+                time.Add(Convert.ToDouble(0));
+                //time[i] = Convert.ToDouble(0);
 
-            plottingData = new double[1, plottingWindow];
+            plottingData = new double[1, num_data_samples];
 
+            stopwatch.Start();
         }
 
+        //[System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        //private static extern bool AllocConsole();
 
         private void PlotButton_Click(object sender, EventArgs e)
         {
@@ -100,7 +111,7 @@ namespace plotTool
                 double[] values = new double[1];
                 int numFields =  parseStream(responseData, ref fields, ref values);
                 if(plottingData.GetLength(0) != numFields)
-                    plottingData = new double[numFields, plottingWindow];
+                    plottingData = new double[numFields, num_data_samples];
                 
                 //checkBoxList = fields;
                 updateData(values);
@@ -122,15 +133,30 @@ namespace plotTool
 
         private void updateData(double[] values)
         {
+      
             for (int rowIdx = 0; rowIdx < plottingData.GetLength(0); rowIdx++)
             {
                 for (int i = 0; i < plottingData.GetLength(1) - 1; i++)
                 {
                     plottingData[rowIdx, i] = plottingData[rowIdx, i + 1];
+                    //if (rowIdx == 0)
+                    //    time[i] = time[i + 1];
                 }
 
+                if (rowIdx == 0)
+                {
+                    long time_ms = stopwatch.ElapsedMilliseconds;
+                    
+                    time.Add(time_ms);
+                    time.RemoveAt(0);
+
+                    //time[plottingData.GetLength(1) - 1] = time_ms;
+
+                    //System.Console.WriteLine(time_ms.ToString());
+                }
                 plottingData[rowIdx, plottingData.GetLength(1) - 1] = values[rowIdx];
             }
+
         }
 
 
